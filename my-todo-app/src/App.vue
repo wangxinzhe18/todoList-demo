@@ -17,10 +17,9 @@
       <div class="task-list">
         <h2>正在进行 ({{ inProgressTasks.length }})</h2>
         <div v-for="task in inProgressTasks" :key="task.id" class="task-item">
-          <span v-if="!task.isEditing" class="task-text">{{ task.text }}</span>
-          <input v-else v-model="task.editingText" type="text" class="edit-input" @keyup.enter="saveTask(task)" @blur="saveTask(task)" />
+          <span class="task-text">{{ task.text }}</span>
           <div class="task-buttons">
-            <button v-if="!task.isEditing" @click="editTask(task)" class="edit-button">✏️</button>
+            <button @click="editTask(task)" class="edit-button">✏️</button>
             <button @click="deleteTask(task)" class="delete-button">🗑️</button>
             <button @click="completeTask(task)" class="complete-button">✔️</button>
           </div>
@@ -78,10 +77,13 @@ const uncompleteTask = (task: Task) => {
 };
 
 const editTask = (task: Task) => {
-  task.isEditing = true;
-  task.editingText = task.text;
+  const newText = prompt('修改任务:', task.text);
+  if (newText !== null && newText.trim()) {
+    task.text = newText.trim();
+  }
 };
 
+// 由于我们不再需要 isEditing 和 editingText，可以删除这些相关的模板代码
 const saveTask = (task: Task) => {
   if (task.editingText?.trim()) {
     task.text = task.editingText.trim();
